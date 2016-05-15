@@ -1,0 +1,43 @@
+def find_length(str):
+    len=0
+    for char in str:
+        len+=1
+    return len
+
+def validatemobilenumber(input):
+    l=find_length(input)
+    if l==10:
+        for i in range(l):
+            if i==0:
+                if input[i]=='0':
+                    return "error"
+            if ord(input[i])>=48 and ord(input[i])<=57:
+                continue
+            else:
+                return "error"
+    else:
+         return "error"
+    return "valid mobile number "
+def findposition(input,i,l):
+    for i in range(i, l):
+        if input[i]=='.':
+            return i
+        if (input[i]>=65 and input[i]<=90) or (input[i]>=97 and input[i]<=125):
+            continue
+        else:
+            return 0
+    else:
+        return 0
+
+def emailid(input):
+    l=find_length(input)
+    for i in range(l):
+        if input[i]=='@':
+            temp=findposition(input,i+1,l)
+            temp1=findposition(input,temp+1,l)
+            if temp1==0 and temp!=0:
+                return  "valid mail id"
+            else:
+                return "error"
+        else:
+            return "error"

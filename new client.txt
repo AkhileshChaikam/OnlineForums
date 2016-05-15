@@ -1,0 +1,204 @@
+import socket
+from deserial2 import *
+
+
+
+
+def registration(s):
+        dict1 = {}
+        print "enter user name"
+        user_name = raw_input()
+        print "enter password"
+        password = raw_input()
+        print "enter date of birth"
+        dob = raw_input()
+        print "enter mobile number"
+        mobile_number = raw_input()
+        print "enter email id"
+        email = raw_input()
+        dict1["option"]=1
+        dict1["username"]=user_name
+        dict1["pasword"]=password
+        dict1["dob"]=dob
+        dict1["email"]=email
+        dict1["mob"]=mobile_number
+        dict2 = transport(dict1, s)
+        if dict2["msg"] == "error":
+            exitfun()
+        socket1()
+
+def openquestion(dict1,s):
+    dict2={}
+    question=raw_input("enter question")
+    dict2["username"]=dict1["username"]
+    dict2=transport(dict2,s)
+    exitfun()
+
+def opensubforum(dict1, s):
+        dict2 = {}
+        subforum = raw_input("enter sub-forum name")
+        dict2["username"]=dict1["username"]
+        dict2["subforum"]=subforum
+        dict2 = transport(dict2, s)
+        if dict2["msg"] == "error":
+            exitfun()
+        i = raw_input("do u want to create question or open question  1 or 2")
+        if i == '1':
+            createquestion(dict1, s)
+        else:
+            openquestion(dict1, s)
+
+def openforum(dict1, s):
+        print "enter forum name"
+        forum_name = raw_input()
+        dict2 = {}
+        dict2["username"]=dict1("username")
+        dict2["forumname"]=forum_name
+        dict2 = transport(dict1, s)
+        if dict2["msg"] == "error":
+            exitfun()
+        i = raw_input("do u want to create sub-forum or open forum  1 or 2")
+        if i == '1':
+            createsubforum(dict1, s)
+        else:
+            opensubforum(dict1, s)
+
+def login(s):
+        dict1 = {}
+        print "enter user name"
+        user_name = raw_input()
+        print "enter password"
+        password = raw_input()
+        dict1["option"]=2
+        dict1["username"]=user_name
+        dict1["password"]=password
+        dict2 = transport(dict1, s)
+        if dict2["msg"] == "error":
+            exitfun()
+        i = raw_input("do u want to create forum or open forum  1 or 2")
+        if i == '1':
+            createforum(dict1, s)
+        else:
+            openforum(dict1, s)
+
+
+def createsubforum(dict1, s):
+        dict2, dict3 = {},{}
+        print "enter sub-forum name"
+        forum_name = raw_input()
+        dict2["option"]=1
+        dict2["forumname"]=forum_name
+        dict3 = transport(dict2, s)
+        if dict3["msg"] == "error":
+            exitfun()
+        createquestion(dict1, s)
+
+
+def createquestion(dict1, s):
+        dict2, dict3 = {},{}
+        print "enter question"
+        question = raw_input()
+        dict2["user"]=dict1["user"]
+        dict2["question"]=question
+        dict3 = transport(dict2, s)
+        if dict3["msg"] == "error":
+            exitfun()
+        createsubforum(dict1, s)
+
+
+def createforum(dict1, s):
+        dict2, dict3 = {},{}
+        print "enter forum name"
+        forum_name = raw_input()
+        dict2["user"]=dict1["user"]
+        dict2["forumname"]=forum_name
+        dict3 = transport(dict2, s)
+        if dict3["msg"] == "error":
+            exitfun()
+        createsubforum(dict1, s)
+
+
+def displayforum(s):
+        dict1 = []
+        dict1["option"]=3
+        dict2 = transport(dict1, s)
+        if dict2["msg"] == "error":
+            exitfun()
+        else:
+            forums(s)
+
+
+def socket1():
+        print "entered in  to group6 forum"
+        s = socket.socket()
+        s.connect(('localhost', 8083))
+        i = raw_input("enter input 1 for registration 2 for login 3 for display forums:")
+        if i == '1':
+             registration(s)
+        elif i == '2':
+            login(s)
+        else:
+            displayforum(s)
+        s.close()
+
+
+def question(s):
+    dict1 = {}
+    questions = raw_input("enter question name")
+    dict1["questions"]=questions
+    transport(dict1, s)
+    exitfun()
+
+
+def subforums(s):
+    dict1 = {}
+    subforum = raw_input("enter sub-forum name")
+    dict1["subforum"]=subforum
+    dict2 = transport(dict1, s)
+    if dict2["msg"] != "no questions":
+        question(s)
+    else:
+        exitfun()
+
+
+def forums(s):
+    dict1 = []
+    forum = raw_input("enter forum name")
+    dict1["forumname"]=forum
+    dict2 = transport(dict1, s)
+    if dict2[0] != "no subforums":
+        subforums(s)
+    else:
+        exitfun()
+
+
+def transport(dict1, s):
+    length = len(str(dict1))
+    length = len(str(length) + str(dict1))
+    msg = str(length) + str(dict1)
+    s.send(msg)
+    l1 = []
+    k = 0
+    while (True):
+        length = s.recv(1)
+        if not (ord(length) >= ord('0') and ord(length) <= ord('9')):
+            l1.append(length)
+            break
+        k = k * 10 + ord(length) - ord('0')
+        msg = s.recv(k)
+    l1.append(msg)
+    msg = "".join(l1)
+    i, list2 = deserialize(msg, 0)
+    print list2
+    return list2
+
+
+def exitfun():
+    i = raw_input("wanna to go to main console")
+    if i == 'y':
+        socket1()
+    else:
+        exit(1)
+
+
+socket1()

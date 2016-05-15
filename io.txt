@@ -1,0 +1,137 @@
+class file:
+    def __init__(self):
+        self.f=open("1gbbinaryfile2.bin","wb+")
+        self.f.seek(7,0)
+        if self.f.read(1)!="1":
+            self.init()
+
+    def init(self):
+        self.i=1
+        self.f.seek(0,0)
+        while self.i<1024*1024:
+            self.f.seek(1017,1)
+            self.str="{0:0=7d}".format(self.i)
+            self.i+=1
+            self.f.write(self.str)
+        self.f.seek(0,0)
+        self.f.write("0000003")
+        self.f.write("1")
+        self.f.write("0000")
+        self.f.write("0000")
+        self.f.write("000")
+
+    def create_block(self):
+        self.f.seek(0,0)
+        temp=int(self.f.read(7))*1024
+        self.f.seek(temp+1017,0)
+        str=self.f.read(7)
+        self.f.seek(0,0)
+        self.f.write(str)
+        return temp
+
+
+    def create_user(self,dict1):
+        self.f.seek(8,0)
+        usr=self.f.read(4)
+        usr=int(usr)+1
+        self.f.seek(8,0)
+        self.f.write("{0:0=4d}".format(usr))
+        temp=self.create_block()
+        self.f.seek((usr-1)*27+1024,0)
+        self.f.write(dict1['username'])
+        self.f.seek((usr-1)*27+1024+20,0)
+        self.f.write("{0:0=7d}".format(temp))
+        self.f.seek(temp,0)
+        self.f.write(str(dict1))
+
+
+    def create_forum(self,dict2):
+        self.f.seek(12,0)
+        forum=self.f.read(4)
+        forum=int(forum)+1
+        self.f.seek(12,0)
+        self.f.write("{0:0=4d}".format(forum))
+        temp=self.create_block()
+        self.f.seek((forum-1)*27+2048,0)
+        self.f.write(dict2['forumname'])
+        self.f.seek((forum-1)*27+2048+20,0)
+        self.f.write("{0:0=7d}".format(temp))
+        self.f.seek(temp,0)
+        self.f.write("{0:0=4d}".format(0))
+        self.f.write(str(dict2))
+        temp1=self.f.tell()
+        return temp,temp1
+
+    def create_subforum(self,dict3,f_address,s_address):
+        self.f.seek(f_address,0)
+        subforums=self.f.read(4)
+        subforums=int(subforums)+1
+        self.f.seek(f_address,0)
+        self.f.write("{0:0=4d}".format(subforums))
+        temp=self.create_block()
+        self.f.seek(s_address+(subforums-1)*27,0)
+        self.f.write(dict3['subforumname'])
+        self.f.seek(s_address+(subforums-1)*27+20,0)
+        self.f.write("{0:0=7d}".format(temp))
+        self.f.seek(temp,0)
+        self.f.write("000")
+        self.f.write(str(dict3))
+        temp1=self.f.tell()
+        return temp,temp1
+
+    def create_question(self,dict4,s_address,que_address):
+        self.f.seek(16,0)
+        que_id=self.f.read(3)
+        que_id=int(que_id)+1
+        self.f.seek(16,0)
+        self.f.write("{0:0=3d}".format(que_id))
+        self.f.seek(s_address,0)
+        questions=self.f.read(3)
+        questions=int(questions)+1
+        self.f.seek(s_address,0)
+        self.f.write("{0:0=3d}".format(questions))
+        if questions>7:
+
+         if questions%7!=1:
+            temp2=questions/7
+            temp3=questions%7
+
+            while temp2>0:
+                self.f.seek(s_address+1017,0)
+                s_address=int(self.f.read(7))*1024
+
+                temp2-=1
+
+            self.f.seek(s_address+(temp3-1)*125,0)
+            temp=self.create_block()
+            #print questions
+            dict4["question_id"]=str(que_id)
+            self.f.write(str(dict4))
+            self.f.seek(s_address+(temp3-1)*125+118,0)
+            self.f.write("{0:0=7d}".format(temp))
+         else:
+           temp1=self.create_block()
+           tmp=questions/7
+           tmp1=tmp
+           while tmp>1:
+               self.f.seek(s_address+1017,0)
+
+               s_address=int(self.f.read(7))*1024
+               tmp-=1
+           self.f.seek(s_address+1017,0)
+           self.f.write("{0:0=7d}".format(temp1/1024))
+           s_address=temp1
+           self.f.seek(s_address,0)
+           temp=self.create_block()
+           dict4["question_id"]=str(que_id)
+           self.f.write(str(dict4))
+           self.f.seek(s_address+118,0)
+           self.f.write("{0:0=7d}".format(temp))
+        else:
+            temp=self.create_block()
+            #print questions
+            self.f.seek(que_address+(questions-1)*125,0)
+            dict4["question_id"]=str(que_id)
+            self.f.write(str(dict4))
+            self.f.seek(que_address+(questions-1)*125+118,0)
+            self.f.write("{0:0=7d}".format(temp))

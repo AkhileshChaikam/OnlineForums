@@ -1,0 +1,283 @@
+import socket
+
+def uname(name):
+
+def pwd(name):
+
+def dob1(name):
+
+def mob1(name):
+
+def email1(name):
+
+def find(username,password):
+
+def registration(s):
+    user_name=transport ("enter user name",s)
+    if uname(user_name)=='error':
+        transport("error",s)
+        return
+    password=transport ("enter password",s)
+    if pwd(password)=='error':
+        transport("error",s)
+        return
+    email=transport ("enter email",s)
+    if email1(email)=="error":
+        transport("error",s)
+        return
+    dob=transport ("enter dob",s)
+    if dob1(dob)=="error":
+        transport("error",s)
+        return
+    mob=transport ("enter mobile number",s)
+    if mob1(mob)=="error":
+        transport("error",s)
+        return
+    list1=[]
+    list1.append(user_name)
+    list1.append(email)
+    list1.append(password)
+    list1.append(dob)
+    list1.append(mob)
+
+
+
+def login(s):
+    user_name=transport ("enter user name",s)
+    if uname(user_name)=='error':
+        transport("error",s)
+        return
+    password=transport ("enter password",s)
+    if pwd(password)=='error':
+        transport("error",s)
+        return
+    i=find(user_name,password)
+    if i=='error':
+        transport("error",s)
+        return
+    while True:
+        i=transport("login successful list of forums \n do u want to enter 1 for createforum  or 2 for openforum 3 for prev:",s)
+        if i=='1':
+            createforum(user_name,s)
+        elif i=='2':
+            openforum(user_name,s)
+        else:
+            return
+
+
+def openforum(username, s):
+    forumname=transport("enter forum_name",s)
+    while(True):
+    # get all sub forums i=transport("listofsubforums(forumname)\ndo u want to enter 1 for createsubforum or2for opensubforum 3 for prev",s)
+     while True:
+        if i=='1':
+            createsubforum(username,s,forumname)
+        elif i=='2':
+            opensubforum(username,s,forumname)
+        else:
+            return
+
+
+def createforum(username, s):
+    forum_name = transport("enter forum name",s)
+   # forum creation i=forumname(forum_name)
+    if i==-1:
+      transport("error", s)
+      return
+    while True:
+        i=transport("creation succesful list of forums do u want to enter 1 for createforum or 2 for openforum 3 for prev:",s)
+        if i=='1':
+            createforum(username,s)
+        elif i=='2':
+            openforum(username,s)
+        else:
+           return
+
+
+def opensubforum(username, s,forumname):
+    subforum_name = transport("enter sub-forum name",s)
+   #get all questions  i=subforumname(forumname,subforum_name)
+    if i==-1 :
+        transport("error",s)
+        return
+    while True:
+        i=transport("list of questions do u want to enter 1 for createquestion  or 2 for openquestion 3 for prev:",s)
+        if i=='1':
+            createquestion(username,s,forumname,subforum_name)
+        elif i=='2':
+            openquestion(username,s,forumname,subforum_name)
+        else:
+            return
+
+
+
+def createsubforum(dict1, s,forumname):
+    subforum_name = transport("enter sub-forum name",s)
+   #insert sub forum i=subforumname(forumname,subforum_name)
+    if i==-1 :
+        transport("error",s)
+        return
+    while True:
+        i=transport("creation succesful do u want to enter 1 for createsubforum  or 2 for opensubforum 3 for prev:",s)
+        if i=='1':
+            createsubforum(dict1,s,forumname)
+        elif i=='2':
+            opensubforum(dict1,s,forumname)
+        else:
+            return
+
+
+
+def openquestion(dict1, s,forumname,subforumname):
+    question_name = transport("enter question",s)
+    #i=get answers from question(forumname,subforumname)
+    if i==-1 :
+        transport("error",s)
+        return
+    while True:
+        i=transport("display answers do u want to enter 1 for createanswer  2 for prev:",s)
+        if i=='1':
+            createanswer(dict1,s,forumname,subforumname,question_name)
+        else:
+            return
+
+def createquestion(dict1, s,forumname,subforumname):
+    question=transport("enter question",s)
+    #i=insert question into subforum
+    if i == "error":
+        transport("error",s)
+        return
+    while True:
+        i=transport("question created succesuful do u want to enter 1 for createquestion  or 2 for openquestion 3 for prev:",s)
+        if i=='1':
+            createquestion(dict1,s,forumname,subforumname)
+        elif i=='2':
+            openquestion(dict1,s,forumname,subforumname)
+        else:
+            return
+
+
+
+def createanswer(dict1,s,forumname,subforumname,questionname):
+    question=transport("enter answer",s)
+    #i=insert question into subforum
+    if i == "error":
+        transport("error",s)
+        return
+
+    while True:
+        i=transport("do u want to enter 1 for createanswer  or 2 for prev:",s)
+        if i=='1':
+            createanswer(dict1,s,forumname,subforumname,questionname)
+        return
+
+
+
+def displayforum(s):
+    i=transport("getallforums enter forum name to enter", s)
+    '''if #no forums exist:
+        transport("no forums exist",s)
+        return
+    else:
+        forums(i,s)'''
+    return
+
+
+def question(forum,subforum,question,s):
+   i=transport("getall answers go to prev 1 for yes 2 for exit",s)
+   if i=='2':
+       exitfun(s)
+   return
+
+
+def subforums(forum,subforum,s):
+    while(True):
+     question = raw_input("get all questions enter question name")
+     '''if no sub forum exist
+         transport("no sub forum",s)'''
+     question(forum,subforum,question,s)
+     i=transport("1 for go to prev 2 for exit")
+     if i=='2':
+         exitfun(s)
+    return
+
+
+def forums(forumname,s):
+    while(True):
+     subforum = transport("get all sub forums enter sub forum name",s)
+     ''' if #no subforum exist
+        transport("no forum with that name",s)
+        return'''
+     subforums(forumname,subforum,s)
+     i=transport("1 for go to prev 2 for exit")
+     if i=='2':
+         exitfun(s)
+    return
+
+
+
+def transport(string1, c):
+    length = len(string1)
+    length = len(str(length) + str(string1))
+    msg = str(length) + str(string1)
+    c.send(msg)
+    l1 = []
+    k = 0
+    while (True):
+        length = c.recv(1)
+        if not (ord(length) >= ord('0') and ord(length) <= ord('9')):
+            l1.append(length)
+            break
+        k = k * 10 + ord(length) - ord('0')
+    if k!=0:
+     msg = c.recv(k)
+    l1.append(msg)
+    msg = "".join(l1)
+    return msg
+
+
+
+def socket1(s):
+    while(True):
+        i="enter input 1 for registration 2 for login 3 for display forums:"
+        i=transport(i,s)
+        if i == '1':
+            registration(s)
+        elif i == '2':
+            login(s)
+        else:
+            displayforum(s)
+        i=raw_input("press 1 for exit or 2 for no")
+        i=transport(i,s)
+        if i=='1':
+         s.close()
+
+
+
+
+def exitfun(s):
+    i = raw_input("wanna to go to main console")
+    if i == 'y':
+        socket1(s)
+    else:
+        s.send("exit")
+        s.close()
+        exit(1)
+
+
+
+def socket2():
+    print "entered in  to group6 forum"
+    s = socket.socket()
+    s.bind(('127.0.0.10', 8083))
+    s.listen(5)
+    c, addr = s.accept()
+    msg=c.recv(1024)
+    if msg=="connected":
+        socket1(c)
+    else:
+        c.close()
+
+
+
+socket2()

@@ -1,0 +1,230 @@
+import datetime
+import urllib2
+import datetime
+import urllib
+dr={}
+dl={}
+
+def registration():
+    print "enter user name"
+    user_name=raw_input()
+    dr['username']=user_name
+    print "enter password"
+    password=raw_input()
+    print "enter date of birth"
+    dob=raw_input()
+    print "enter mobile number"
+    mobile_number=raw_input()
+    print "enter email id"
+    email=raw_input()
+    dr['username']=user_name
+    dr['password']=password
+    dr['dob']=dob
+    dr['mobilenumber']=mobile_number
+    dr['email']=email
+    return dr
+
+
+def login():
+    print "enter user name"
+    user_name=raw_input()
+    print "enter password"
+    password=raw_input()
+    dl['username']=user_name
+    dl['password']=password
+    return dl
+
+def selection_of_questionpart(x):
+    while True:
+        values={}
+        print "enter your option 1)see the answer 2)post answer 3)exit now"
+        input=raw_input()
+        if input=='1':
+            databytes = urllib.urlencode(x)
+            req = urllib2.urlopen(url='http://localhost:8083/createforum', data=databytes.encode('utf-8'))
+            print(req.read())
+        elif input=='2':
+            print "enter the answer for the question"
+            answer=raw_input()
+            values['answer']=answer
+            databytes = urllib.urlencode(values)
+            req = urllib2.urlopen(url='http://localhost:8083/createforum', data=databytes.encode('utf-8'))
+            print(req.read())
+        else:
+            break
+    return
+
+
+def questionpart():
+    while True:
+        values={}
+        print "enter your option 1) post question \n 2) delete question \n 3) display questions \n 4) exit know "
+        input=raw_input()
+        if input=='1':
+            print "enter your question"
+            question=raw_input()
+            values['question']=question
+            now = datetime.datetime.now()
+            values['date']=now
+            databytes = urllib.urlencode(values)
+            req = urllib2.urlopen(url='http://localhost:8083/createforum', data=databytes.encode('utf-8'))
+            print(req.read())
+        elif input=='2':
+            print "enter which question do u want to delete"
+            question=raw_input()
+            values['question']=question
+            databytes = urllib.urlencode(values)
+            req = urllib2.urlopen(url='http://localhost:8083/createforum', data=databytes.encode('utf-8'))
+            print(req.read())
+        elif input=='3':
+            print "all the questions are"
+            databytes = urllib.urlencode()
+            req = urllib2.urlopen(url='http://localhost:8083/createforum', data=databytes.encode('utf-8'))
+            print(req.read())
+            print "enter the question nubmer"
+            x=raw_input()
+            databytes = urllib.urlencode(x)
+            req = urllib2.urlopen(url='http://localhost:8083/createforum', data=databytes.encode('utf-8'))
+            print(req.read())
+            if req.read()=='true':
+                selection_of_questionpart(x)
+            else:
+                print "question selection is incorrect"
+                break
+        else:
+            return
+    return
+
+def subforumpart():
+    while True:
+        values={}
+        print "enter your option 1)create subforum \n 2)delete subforum \n3)open sub forum\n 4)exit know \n"
+        input=raw_input()
+        if input=='1':
+            print "enter subforumname"
+            subforumname=raw_input()
+            values['subforumname']=subforumname
+            print "enter created by"
+            createdby=raw_input()
+            values['createdby']=createdby
+            now = datetime.datetime.now()
+            values['date']=now
+            databytes = urllib.urlencode(values)
+            req = urllib2.urlopen(url='http://localhost:8083/createforum', data=databytes.encode('utf-8'))
+            print(req.read())
+        elif input=='2':
+            print "enter the subforum name for deletion"
+            subforumname=raw_input()
+            values['subforumname']=subforumname
+            databytes = urllib.urlencode(values)
+            req = urllib2.urlopen(url='http://localhost:8083/createforum', data=databytes.encode('utf-8'))
+            print(req.read())
+        elif input=='3':
+            print "all the sub forums are"
+            databytes=urllib.urlencode()
+            req = urllib2.urlopen(url='http://localhost:8083/signup', data=databytes.encode('utf-8'))
+            print(req.read())
+            print "enter sub forumname"
+            subforumname=raw_input()
+            values['subforumname']=subforumname
+            databytes = urllib.urlencode(values)
+            req = urllib2.urlopen(url='http://localhost:8083/signin', data=databytes.encode('utf-8'))
+            print(req.read())
+            if req.read()=='true':
+                questionpart()
+            else:
+                print "the entered subfroum is not present"
+                break
+        else:
+            return
+    return
+
+
+
+def forumpart():
+    while True:
+        values={}
+        print "enter your option 1)create forum \n2)delete forum\n3)open forum\n 4)exit know"
+        input=raw_input()
+        if input=='1':
+            print "enter the forumname "
+            forumname=raw_input()
+            print "enter created by"
+            createdby=raw_input()
+            values['forumname']=forumname
+            values['createdby']=createdby
+            now = datetime.datetime.now()
+            values['date']=now
+            databytes = urllib.urlencode(values)
+            req = urllib2.urlopen(url='http://localhost:8083/createforum', data=databytes.encode('utf-8'))
+            print(req.read())
+        elif input=='2':
+            print "enter the forumname"
+            forumname=raw_input()
+            values['forumname']=forumname
+            databytes = urllib.urlencode(values)
+            req = urllib2.urlopen(url='http://localhost:8083/createforum', data=databytes.encode('utf-8'))
+            print(req.read())
+        elif input=='3':
+            print "all the forums are"
+            databytes=urllib.urlencode()
+            req = urllib2.urlopen(url='http://localhost:8083/signup', data=databytes.encode('utf-8'))
+            print(req.read())
+            print "enter forumname"
+            forumname=raw_input()
+            values['forumname']=forumname
+            databytes = urllib.urlencode(values)
+            req = urllib2.urlopen(url='http://localhost:8083/signin', data=databytes.encode('utf-8'))
+            print(req.read())
+            if req.read()=='true':
+                subforumpart()
+            else:
+                print "the enetered forum is not present"
+                break
+        else:
+            return
+    return
+
+
+
+
+while True:
+    print "enter ur option 1)registration 2)login 3)display"
+    i=raw_input()
+    if i=='1':
+        print "enter ur registration details"
+        dr=registration()
+        databytes = urllib.urlencode(dr)
+        req = urllib2.urlopen(url='http://localhost:8083/signup', data=databytes.encode('utf-8'))
+        print(req.read())
+
+    elif i=='2':
+        print "enter ur login details"
+        dl=login()
+        databytes = urllib.urlencode(dl)
+        req = urllib2.urlopen(url='http://localhost:8083/signin', data=databytes.encode('utf-8'))
+        print(req.read())
+        if req.read()=='true':
+            forumpart()
+        else:
+            print "your username and password is incorrect please enter again"
+            break
+    elif i=='3':
+        print "all the forums are"
+        databytes=urllib.urlencode()
+        req = urllib2.urlopen(url='http://localhost:8083/signup', data=databytes.encode('utf-8'))
+        print(req.read())
+    else:
+        exit(0)
+
+
+
+
+
+
+
+
+
+
+
+

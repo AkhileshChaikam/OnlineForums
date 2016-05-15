@@ -1,0 +1,5 @@
+def notempty(s):
+    if(len(s)==0):
+        return "error"
+    else:
+        return "not empty"
