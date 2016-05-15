@@ -1,0 +1,2 @@
+# OnlineForums
+we developed a project similar to the quora,where user can post the question and other user can comment the post and also people can follow the users.Apart from that our team build the memory manager that use the memory efficiently. In this project our team used file system as the backend to store the data.Where we implemented the inode structure,handling metadata,handling data all the file system stuff we have implemented and got hands on experience on file system
